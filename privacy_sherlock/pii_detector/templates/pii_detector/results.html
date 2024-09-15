@@ -1,13 +1,34 @@
-<h2>PII Detection Results</h2>
-
-{% if pii_detected %}
+{% if results %}
+    <h2>Results:</h2>
     <ul>
-        {% for pii in pii_detected %}
-            <li>{{ pii.type }}: {{ pii.value }} (Risk: {{ pii.risk_score }})</li>
+        {% for result in results %}
+            <li>
+                <strong>{{ result.file_name }}</strong>
+
+                {% if result.pii_detected %}
+                    <h3>PII Detected:</h3>
+                    <ul>
+                        {% for pii in result.pii_detected %}
+                            <li>{{ pii.type }}: {{ pii.value }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                {% if result.anonymized_text %}
+                    <h3>Anonymized Text:</h3>
+                    <pre>{{ result.anonymized_text }}</pre>
+                {% endif %}
+
+                {% if result.anonymized_json %}
+                    <h3>Anonymized JSON:</h3>
+                    <pre>{{ result.anonymized_json|pprint }}</pre>
+                {% endif %}
+
+                {% if result.anonymized_dataframe %}
+                    <h3>Anonymized Table:</h3>
+                    {{ result.anonymized_dataframe|safe }}
+                {% endif %}
+            </li>
         {% endfor %}
     </ul>
-{% else %}
-    <p>No PII detected.</p>
 {% endif %}
-
-<a href="{% url 'upload-files' %}">Upload more files</a>

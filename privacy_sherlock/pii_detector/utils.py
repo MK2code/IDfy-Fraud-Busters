@@ -6,7 +6,12 @@ import os
 import pandas as pd
 from pdf2image import convert_from_path
 import pytesseract
+from presidio_analyzer import BatchAnalyzerEngine, AnalyzerEngine
+from presidio_anonymizer import BatchAnonymizerEngine
 
+# Initialize batch analyzers and anonymizers
+batch_analyzer = BatchAnalyzerEngine(analyzer_engine=AnalyzerEngine())
+batch_anonymizer = BatchAnonymizerEngine()
 
 analyzer = AnalyzerEngine()
 anonymizer = AnonymizerEngine()
@@ -93,14 +98,32 @@ def save_text_to_file(folder_name, file_name, text_content):
         text_file.write(text_content)
     
     return text_file_path
+def process_dataframe(df: pd.DataFrame):
+    df_dict = df.to_dict(orient="list")  # Convert DataFrame to dictionary for analysis
+    analyzer_results = list(batch_analyzer.analyze_dict(df_dict, language='en'))
+    anonymizer_results = batch_anonymizer.anonymize_dict(analyzer_results)
+    scrubbed_df = pd.DataFrame(anonymizer_results)
+    return scrubbed_df
 
+# Function to process JSON data
+def process_json_data(json_data: dict):
+    analyzer_results = list(batch_analyzer.analyze_dict(json_data, language='en'))
+    anonymizer_results = batch_anonymizer.anonymize_dict(analyzer_results)
+    return anonymizer_results
 # Main function to process files
 def process_uploaded_files(file, folder_name):
     if file.name.endswith('.pdf'):
         return process_pdf_to_text(file, folder_name)
     elif file.name.endswith('.txt'):
         return process_text_file(file, folder_name)
-    elif file.name.endswith('.xlsx'):
-        return process_excel_file(file, folder_name)
+    elif file.name.endswith('.xlsx') or file.name.endswith('.csv'):
+        df = pd.read_excel(file) if file.name.endswith('.xlsx') else pd.read_csv(file)
+        scrubbed_df = process_dataframe(df)
+        return scrubbed_df.to_html()  # Convert DataFrame to HTML for display
+    elif file.name.endswith('.json'):
+        import json
+        json_data = json.load(file)
+        anonymized_json = process_json_data(json_data)
+        return anonymized_json  # Return the processed JSON data
     else:
         raise ValueError("Unsupported file type")

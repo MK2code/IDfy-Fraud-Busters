@@ -26,7 +26,7 @@ class FileUploadForm(forms.Form):
     )
     file = MultipleFileField(label='Select files')
     folder = forms.ModelChoiceField(queryset=None, required=False, label="Select an existing folder")
-    new_folder_name = forms.CharField(max_length=255, required=False, label='Or create a new folder')
+    new_folder_name = forms.CharField(max_length=255, required=False, label='Enter Folder Name')
 
     def __init__(self, user=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
