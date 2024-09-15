@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This Django project allows users to upload files (text, PDF, Excel) and performs PII (Personally Identifiable Information) detection using the Presidio library. It supports text extraction, PII detection, and anonymization.
+This Django project allows users to upload files (text, PDF, Excel) and performs PII (Personally Identifiable Information) detection. It supports text extraction, PII detection, and anonymization.
 
 ## Requirements
 
