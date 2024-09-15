@@ -1,0 +1,28 @@
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Upload Files</button>
+</form>
+
+{% if error %}
+    <p style="color: red;">{{ error }}</p>
+{% endif %}
+
+{% if results %}
+    <h2>Results:</h2>
+    <ul>
+        {% for result in results %}
+            <li>
+                <strong>{{ result.file_name }}</strong>
+                <h3>PII Detected:</h3>
+                <ul>
+                    {% for pii in result.pii_detected %}
+                        <li>{{ pii.type }}: {{ pii.value }}</li>
+                    {% endfor %}
+                </ul>
+                <h3>Anonymized Text:</h3>
+                <pre>{{ result.anonymized_text }}</pre>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}

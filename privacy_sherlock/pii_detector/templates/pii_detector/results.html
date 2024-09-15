@@ -1,0 +1,13 @@
+<h2>PII Detection Results</h2>
+
+{% if pii_detected %}
+    <ul>
+        {% for pii in pii_detected %}
+            <li>{{ pii.type }}: {{ pii.value }} (Risk: {{ pii.risk_score }})</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No PII detected.</p>
+{% endif %}
+
+<a href="{% url 'upload-files' %}">Upload more files</a>
