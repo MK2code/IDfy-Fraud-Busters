@@ -63,10 +63,12 @@ After processing, the results include:
 
 ## UI 
 
-1. Upload Page 
+1. Upload Page
+   
    ![Screenshot 2024-09-15 224649](https://github.com/user-attachments/assets/4dc09e3f-0540-49e0-9677-e272bb2e3e86)
 
-2. Results
+3. Results
+   
    ![image](https://github.com/user-attachments/assets/77440d7b-1ff9-4b7b-8000-b17486db7970)
  
 
